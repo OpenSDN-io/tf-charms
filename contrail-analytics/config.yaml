@@ -63,7 +63,7 @@ options:
     type: string
     description: |
       Extra options to pass to the Docker config file '/etc/docker/daemon.json' in json format.
-      e.g. {"iptables": false, "insecure-registries": ["host2", "tungstenfabric", "host1"]}
+      e.g. {"iptables": false, "insecure-registries": ["host2", "opensdn", "host1"]}
   docker-user:
     type: string
     description: |

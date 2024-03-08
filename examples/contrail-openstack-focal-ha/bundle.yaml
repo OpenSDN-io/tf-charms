@@ -311,7 +311,7 @@ applications:
   tf-agent:
     charm: cs:~juniper-os-software/contrail-agent
     options:
-      docker-registry: tungstenfabric
+      docker-registry: opensdn
       docker-registry-insecure: true
       image-tag: latest
       kernel-hugepages-1g: ""
@@ -326,7 +326,7 @@ applications:
     expose: true
     options:
       control-network: 192.168.51.0/24
-      docker-registry: tungstenfabric
+      docker-registry: opensdn
       docker-registry-insecure: true
       image-tag: latest
       log-level: SYS_DEBUG
@@ -345,7 +345,7 @@ applications:
       cassandra-jvm-extra-opts: -Xms16g -Xmx16g
       cassandra-minimum-diskgb: "4"
       control-network: 192.168.51.0/24
-      docker-registry: tungstenfabric
+      docker-registry: opensdn
       docker-registry-insecure: true
       image-tag: latest
       log-level: SYS_DEBUG
@@ -365,7 +365,7 @@ applications:
       cassandra-minimum-diskgb: "4"
       control-network: 192.168.51.0/24
       data-network: 10.0.0.0/16
-      docker-registry: tungstenfabric
+      docker-registry: opensdn
       docker-registry-insecure: true
       image-tag: latest
       log-level: SYS_DEBUG
@@ -381,7 +381,7 @@ applications:
   tf-openstack:
     charm: cs:~juniper-os-software/contrail-openstack
     options:
-      docker-registry: tungstenfabric
+      docker-registry: opensdn
       docker-registry-insecure: true
       image-tag: latest
   ubuntu:
