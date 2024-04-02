@@ -52,7 +52,7 @@ PLUGIN_FILES = {
     },
     "neutron": {
         "{python_path}": ("/opt/contrail/site-packages/", [
-            "/usr/lib/python2.7/site-packages/neutron_plugin_contrail-0.1dev-py2.7.egg-info/",
+            "/usr/lib/python2.7/site-packages/neutron_plugin_contrail-0.1.dev0-py2.7.egg-info/",
             "/usr/lib/python2.7/site-packages/neutron_plugin_contrail/",
             "/usr/lib/python2.7/site-packages/vnc_api/",
             "/usr/lib/python2.7/site-packages/cfgm_common/",
@@ -60,7 +60,7 @@ PLUGIN_FILES = {
     },
     "heat": {
         "{python_path}": ("/opt/contrail/site-packages/", [
-            "/usr/lib/python2.7/site-packages/contrail_heat-0.1dev-py2.7.egg-info/",
+            "/usr/lib/python2.7/site-packages/contrail_heat-0.1.dev0-py2.7.egg-info/",
             "/usr/lib/python2.7/site-packages/contrail_heat/",
             "/usr/lib/python2.7/site-packages/vnc_api/",
             "/usr/lib/python2.7/site-packages/cfgm_common/",
