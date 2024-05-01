@@ -21,13 +21,13 @@ Manual installation
 Configure machines for memory, cores and disk sizes. The following constraints are given for example as minimal requirments.
 
 ```bash
-juju add-machine --constraints mem=8G cores=2 root-disk=50G --series=xenial # for all-in-one machine
+juju add-machine --constraints mem=8G cores=2 root-disk=50G --series=bionic # for all-in-one machine
 ```
 
 Please refer to Juju documentation how to add machines in the cloud that you chose.
-Please note that you can use both series - xenial or bionic.
+Please note that you can use both series - bionic or bionic.
 
-4. Deploy Kubernetes services. Here and later the xenial series is used.
+4. Deploy Kubernetes services. Here and later the bionic series is used.
 
 Some of applications may need an additional configuration. You can configure them by using a yaml-formatted file or or by passing options/values directly on the command line
 
@@ -38,20 +38,20 @@ You must use the same docker version for Contrail and Kubernetes.
 Deploy ntp, easyrsa, etcd, kubernetes-master, kubernetes-worker:
 
 ```bash
-juju deploy --series xenial cs:ntp ntp
+juju deploy --series bionic cs:ntp ntp
 
-juju deploy --series xenial cs:~containers/easyrsa --to lxd:0
+juju deploy --series bionic cs:~containers/easyrsa --to lxd:0
 
-juju deploy --series xenial cs:~containers/etcd --to:0 --config channel="3.2/stable"
+juju deploy --series bionic cs:~containers/etcd --to:0 --config channel="3.2/stable"
 
-juju deploy --series xenial cs:~containers/kubernetes-master-696 --to:0 \
+juju deploy --series bionic cs:~containers/kubernetes-master-696 --to:0 \
     --config channel="1.14/stable" \
     --config docker_runtime="custom" \
     --config docker_runtime_repo="deb [arch={ARCH}] https://download.docker.com/linux/ubuntu {CODE} stable" \
     --config docker_runtime_key_url="https://download.docker.com/linux/ubuntu/gpg" \
     --config docker_runtime_package="docker-ce"
 
-juju deploy --series xenial cs:~containers/kubernetes-worker-550 --to:0 \
+juju deploy --series bionic cs:~containers/kubernetes-worker-550 --to:0 \
     --config channel="1.14/stable" \
     --config ingress="false" \
     --config docker_runtime="custom" \
@@ -90,10 +90,10 @@ contrail-kubernetes-master:
 ```
 
 ```bash
-juju deploy --series xenial cs:~juniper-os-software/contrail-kubernetes-master \
+juju deploy --series bionic cs:~juniper-os-software/contrail-kubernetes-master \
     --config ./path-to-config.yaml
 
-juju deploy --series xenial cs:~juniper-os-software/contrail-kubernetes-node
+juju deploy --series bionic cs:~juniper-os-software/contrail-kubernetes-node
 ```
 
 6. Add necessary relations.

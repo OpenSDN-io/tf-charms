@@ -4,9 +4,9 @@ maintainer: Anastasia Nappelbaum <rtikitavi@gmail.com>
 description: |
   Contrail command component within docker container.
 series:
-  - xenial
   - bionic
   - focal
+  - jammy
 provides:
   https-services:
     interface: http

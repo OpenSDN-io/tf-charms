@@ -35,7 +35,6 @@ from charmhelpers.core.host import (
 from charmhelpers.core import fstab
 from charmhelpers.core import sysctl
 from charmhelpers.contrib.charmsupport import nrpe
-from charmhelpers.core.templating import render
 import common_utils
 
 
@@ -392,7 +391,6 @@ def remove_created_files():
     common_utils.remove_file_safe(BASE_CONFIGS_PATH + "/contrail-vrouter-agent.conf")
     common_utils.remove_file_safe(BASE_CONFIGS_PATH + "/common_vrouter.env")
     common_utils.remove_file_safe(CONFIGS_PATH + "/docker-compose.yaml")
-    common_utils.remove_file_safe("/etc/apparmor.d/libvirt/TEMPLATE.qemu")
 
 
 def action_upgrade(params):
@@ -435,22 +433,6 @@ def fix_libvirt():
         "\!^[[:space:]]*owner \"/run/hugepages/kvm/libvirt/qemu/\*\*\" rw"
         "!a\\\n  owner \"/hugepages/libvirt/qemu/**\" rw,",
         "/etc/apparmor.d/abstractions/libvirt-qemu"])
-
-    if lsb_release()['DISTRIB_CODENAME'] == 'xenial':
-        # fix libvirt tempate for xenial
-        render("TEMPLATE.qemu",
-               "/etc/apparmor.d/libvirt/TEMPLATE.qemu",
-               dict())
-        libvirt_file = '/etc/apparmor.d/abstractions/libvirt-qemu'
-        with open(libvirt_file) as f:
-            data = f.readlines()
-        new_line = "/run/vrouter/* rw,"
-        for line in data:
-            if new_line in line:
-                break
-        else:
-            with open(libvirt_file, "a") as f:
-                f.write("\n  " + new_line + "\n")
 
     service_restart("apparmor")
     check_call(["/etc/init.d/apparmor", "reload"])

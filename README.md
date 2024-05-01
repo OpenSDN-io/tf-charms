@@ -79,7 +79,7 @@ juju add-credential aws   #add credentials
 3. Create controller:
 
 ```bash
-juju bootstrap --bootstrap-series=xenial <cloud name> <controller name>
+juju bootstrap --bootstrap-series=bionic <cloud name> <controller name>
 ```
 
 [Bootstrapping controller](https://docs.jujucharms.com/2.4/en/controllers-creating)

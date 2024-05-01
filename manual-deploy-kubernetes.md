@@ -11,12 +11,12 @@ Manual installation
 Configure machines for memory, cores and disk sizes. The following constraints are given for example as minimal requirments.
 
 ```bash
-juju add-machine --constraints mem=32G cores=8 root-disk=150G --series=xenial # for all-in-one machine
+juju add-machine --constraints mem=32G cores=8 root-disk=150G --series=bionic # for all-in-one machine
 ```
 
-Please note that you can use both series - xenial or bionic.
+Please note that you can use both series - bionic or bionic.
 
-3. Deploy Kubernetes services. Here and later the xenial series is used.
+3. Deploy Kubernetes services. Here and later the bionic series is used.
 
 Some of applications may need an additional configuration. You can configure it by using a yaml-formatted file or or by passing options/values directly on the command line
 
@@ -27,20 +27,20 @@ You must use the same docker version for Contrail and Kubernetes.
 Deploy ntp, easyrsa, etcd, kubernetes-master, kubernetes-worker:
 
 ```bash
-juju deploy --series xenial cs:ntp ntp
+juju deploy --series bionic cs:ntp ntp
 
-juju deploy --series xenial cs:~containers/easyrsa --to lxd:0
+juju deploy --series bionic cs:~containers/easyrsa --to lxd:0
 
-juju deploy --series xenial cs:~containers/etcd --to:0 --config channel="3.2/stable"
+juju deploy --series bionic cs:~containers/etcd --to:0 --config channel="3.2/stable"
 
-juju deploy --series xenial cs:~containers/kubernetes-master-696 --to:0 \
+juju deploy --series bionic cs:~containers/kubernetes-master-696 --to:0 \
     --config channel="1.14/stable" \
     --config docker_runtime="custom" \
     --config docker_runtime_repo="deb [arch={ARCH}] https://download.docker.com/linux/ubuntu {CODE} stable" \
     --config docker_runtime_key_url="https://download.docker.com/linux/ubuntu/gpg" \
     --config docker_runtime_package="docker-ce"
 
-juju deploy --series xenial cs:~containers/kubernetes-worker-550 --to:0 \
+juju deploy --series bionic cs:~containers/kubernetes-worker-550 --to:0 \
     --config channel="1.14/stable" \
     --config docker_runtime="custom" \
     --config docker_runtime_repo="deb [arch={ARCH}] https://download.docker.com/linux/ubuntu {CODE} stable" \
@@ -55,19 +55,19 @@ Deploy contrail-analyticsdb, contrail-analytics, contrail-controller, contrail-k
 The "auth-mode" parameter of the contrail-controller charm must be set to “no-auth” if Contrail is deployed without a keystone (without OpenStack).
 
 ```bash
-juju deploy --series xenial cs:~juniper-os-software/contrail-controller --to:0 \
+juju deploy --series bionic cs:~juniper-os-software/contrail-controller --to:0 \
     --config cassandra-minimum-diskgb="4" --config cassandra-jvm-extra-opts="-Xms1g -Xmx2g" --config auth-mode="no-auth"
 
-juju deploy --series xenial cs:~juniper-os-software/contrail-analyticsdb --to:0 \
+juju deploy --series bionic cs:~juniper-os-software/contrail-analyticsdb --to:0 \
     --config cassandra-minimum-diskgb="4" --config cassandra-jvm-extra-opts="-Xms1g -Xmx2g"
 
-juju deploy --series xenial cs:~juniper-os-software/contrail-analytics --to:0
+juju deploy --series bionic cs:~juniper-os-software/contrail-analytics --to:0
 
-juju deploy --series xenial cs:~juniper-os-software/contrail-kubernetes-master
+juju deploy --series bionic cs:~juniper-os-software/contrail-kubernetes-master
 
-juju deploy --series xenial cs:~juniper-os-software/contrail-kubernetes-node
+juju deploy --series bionic cs:~juniper-os-software/contrail-kubernetes-node
 
-juju deploy --series xenial cs:~juniper-os-software/contrail-agent contrail-agent
+juju deploy --series bionic cs:~juniper-os-software/contrail-agent contrail-agent
 ```
 
 5. Add necessary relations.

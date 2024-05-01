@@ -4,9 +4,9 @@ maintainer: Andrey Pavlov <andrey.mp@gmail.com>
 description: |
   Contrail controller component within docker container.
 series:
-  - xenial
   - bionic
   - focal
+  - jammy
 peers:
   controller-cluster:
     interface: contrail-controller-cluster

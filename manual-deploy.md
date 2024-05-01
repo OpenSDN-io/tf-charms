@@ -7,12 +7,12 @@ Manual installation
 
     Configure machines for memory, cores and disk sizes. The following constraints are given for example as minimal requirments.
     ```
-    juju add-machine --constraints mem=8G cores=2 root-disk=40G --series=xenial   #for openstack machine(s) 0
-    juju add-machine --constraints mem=7G cores=4 root-disk=40G --series=xenial   #for compute machine(s) 1,(3)
-    juju add-machine --constraints mem=15G cores=2 root-disk=300G --series=xenial #for contrail  machine 2
+    juju add-machine --constraints mem=8G cores=2 root-disk=40G --series=bionic   #for openstack machine(s) 0
+    juju add-machine --constraints mem=7G cores=4 root-disk=40G --series=bionic   #for compute machine(s) 1,(3)
+    juju add-machine --constraints mem=15G cores=2 root-disk=300G --series=bionic #for contrail  machine 2
     ```
 
-2. Deploy openstack services. Here and later the xenial series are used, if you use others you may change it.
+2. Deploy openstack services. Here and later the bionic series are used, if you use others you may change it.
 
     Some of applications may need an additional configuration. You can configure it 
     - by using a yaml-formatted file
@@ -20,7 +20,7 @@ Manual installation
         An example of `nova-compute-config.yaml`:
         ```
         nova-compute:
-            openstack-origin: cloud:xenial-ocata
+            openstack-origin: cloud:bionic-ocata
             virt-type: qemu 
             enable-resize: True
             enable-live-migration: True
@@ -28,12 +28,12 @@ Manual installation
         ```
         To deploy:
         ```
-        juju deploy cs:xenial/nova-compute --config ./nova-compute-config.yaml
+        juju deploy cs:bionic/nova-compute --config ./nova-compute-config.yaml
         ```
 
     - or by passing options/values directly on the command line
         ```
-        juju deploy cs:xenial/nova-cloud-controller --config console-access-protocol=novnc --config openstack-origin=cloud:xenial-ocata
+        juju deploy cs:bionic/nova-cloud-controller --config console-access-protocol=novnc --config openstack-origin=cloud:bionic-ocata
         ```
 
     - You also use the combination of the above.
@@ -44,21 +44,21 @@ Manual installation
 
     **NOTE: OpenStack services should be set on different machines or on different containers to prevent haproxy conflicts from applications.** You should point machine or container to which you want to deploy the application by `--to <machine number>` option.
     ```
-    juju deploy cs:xenial/ntp
-    juju deploy cs:xenial/rabbitmq-server --to lxd:0
-    juju deploy cs:xenial/percona-cluster mysql --config root-password=<root-password> --config max-connections=1500 --to lxd:0
-    juju deploy cs:xenial/openstack-dashboard --config openstack-origin=cloud:xenial-ocata --to lxd:0
-    juju deploy cs:xenial/nova-cloud-controller --config console-access-protocol=novnc --config openstack-origin=cloud:xenial-ocata --config network-manager=Neutron --to lxd:0
-    juju deploy cs:xenial/neutron-api --config manage-neutron-plugin-legacy-mode=false --config openstack-origin=cloud:xenial-ocata --config neutron-security-groups=true --to lxd:0
-    juju deploy cs:xenial/glance --config openstack-origin=cloud:xenial-ocata --to lxd:0
-    juju deploy cs:xenial/keystone --config admin-password=<admin-password> --config admin-role=admin --config openstack-origin=cloud:xenial-ocata --to lxd:0
+    juju deploy cs:bionic/ntp
+    juju deploy cs:bionic/rabbitmq-server --to lxd:0
+    juju deploy cs:bionic/percona-cluster mysql --config root-password=<root-password> --config max-connections=1500 --to lxd:0
+    juju deploy cs:bionic/openstack-dashboard --config openstack-origin=cloud:bionic-ocata --to lxd:0
+    juju deploy cs:bionic/nova-cloud-controller --config console-access-protocol=novnc --config openstack-origin=cloud:bionic-ocata --config network-manager=Neutron --to lxd:0
+    juju deploy cs:bionic/neutron-api --config manage-neutron-plugin-legacy-mode=false --config openstack-origin=cloud:bionic-ocata --config neutron-security-groups=true --to lxd:0
+    juju deploy cs:bionic/glance --config openstack-origin=cloud:bionic-ocata --to lxd:0
+    juju deploy cs:bionic/keystone --config admin-password=<admin-password> --config admin-role=admin --config openstack-origin=cloud:bionic-ocata --to lxd:0
     ```
 
 3.  Deploy and configure nova-compute.
 
     Deploy nova-compute to compute machine or machines.
     ```
-    juju deploy cs:xenial/nova-compute --config ./nova-compute-config.yaml --to 1
+    juju deploy cs:bionic/nova-compute --config ./nova-compute-config.yaml --to 1
     ```
 
     If you need additional computes you can  add them by
@@ -70,12 +70,12 @@ Manual installation
 
     Deploy contrail-keystone-auth, contrail-controller, contrail-analyticsdb, contrail-analytics, contrail-openstack, contrail-agent from the directory you have downloaded the charms.
     ```
-    juju deploy --series=xenial $CHARMS_DIRECTORY/contrail-charms/contrail-keystone-auth --to 2
-    juju deploy --series=xenial $CHARMS_DIRECTORY/contrail-charms/contrail-controller --config auth-mode=rbac --config cassandra-minimum-diskgb=4 --config cassandra-jvm-extra-opts="-Xms1g -Xmx2g" --to 2
-    juju deploy --series=xenial $CHARMS_DIRECTORY/contrail-charms/contrail-analyticsdb cassandra-minimum-diskgb=4 --config cassandra-jvm-extra-opts="-Xms1g -Xmx2g" --to 2
-    juju deploy --series=xenial $CHARMS_DIRECTORY/contrail-charms/contrail-analytics --to 2
-    juju deploy --series=xenial $CHARMS_DIRECTORY/contrail-charms/contrail-openstack
-    juju deploy --series=xenial $CHARMS_DIRECTORY/contrail-charms/contrail-agent
+    juju deploy --series=bionic $CHARMS_DIRECTORY/contrail-charms/contrail-keystone-auth --to 2
+    juju deploy --series=bionic $CHARMS_DIRECTORY/contrail-charms/contrail-controller --config auth-mode=rbac --config cassandra-minimum-diskgb=4 --config cassandra-jvm-extra-opts="-Xms1g -Xmx2g" --to 2
+    juju deploy --series=bionic $CHARMS_DIRECTORY/contrail-charms/contrail-analyticsdb cassandra-minimum-diskgb=4 --config cassandra-jvm-extra-opts="-Xms1g -Xmx2g" --to 2
+    juju deploy --series=bionic $CHARMS_DIRECTORY/contrail-charms/contrail-analytics --to 2
+    juju deploy --series=bionic $CHARMS_DIRECTORY/contrail-charms/contrail-openstack
+    juju deploy --series=bionic $CHARMS_DIRECTORY/contrail-charms/contrail-agent
     ```
 
 5. Expose applications to be publicly available.
@@ -98,7 +98,7 @@ Manual installation
     To use SSL with contrail services deploy easyrsa service and add the relations to contrail-controller and contrail-agent services.
 
     ```
-    juju deploy cs:~containers/xenial/easyrsa --to 0
+    juju deploy cs:~containers/bionic/easyrsa --to 0
     juju add-relation easyrsa contrail-controller
     juju add-relation easyrsa contrail-analytics
     juju add-relation easyrsa contrail-analyticsdb
@@ -120,7 +120,7 @@ Manual installation
     Keepalived is a subordinate charm to haproxy and does not require `to` option.
     Haproxy charm must have peering_mode set to active-active. In active-passive mode it creates additional listeners on the same ports as other Contrail services and system doesn't work due to port conflicts.
     ```
-    juju deploy cs:xenial/haproxy --to <first contrail-controller machine> --config peering_mode=active-active
+    juju deploy cs:bionic/haproxy --to <first contrail-controller machine> --config peering_mode=active-active
     juju add-unit haproxy --to <another contrail-controller machine>
     juju deploy cs:~containers/keepalived --config virtual_ip=<vip>
     ```

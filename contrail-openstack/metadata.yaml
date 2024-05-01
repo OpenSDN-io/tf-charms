@@ -6,9 +6,9 @@ description: |
 categories:
   - openstack
 series:
-  - xenial
   - bionic
   - focal
+  - jammy
 subordinate: true
 peers:
   cluster:

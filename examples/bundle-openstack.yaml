@@ -1,16 +1,16 @@
-series: xenial
+series: bionic
 services:
   ubuntu:
-    charm: cs:xenial/ubuntu
+    charm: cs:bionic/ubuntu
     num_units: 3
     to: [ "1", "2", "3" ]
   ntp:
-    charm: cs:xenial/ntp
+    charm: cs:bionic/ntp
     num_units: 0
     options:
       source: ntp.juniper.net
   mysql:
-    charm: cs:xenial/percona-cluster
+    charm: cs:bionic/percona-cluster
     options:
       dataset-size: 15%
       max-connections: 10000
@@ -21,123 +21,123 @@ services:
     num_units: 3
     to: [ "lxd:1", "lxd:2", "lxd:3" ]
   rabbitmq-server:
-    charm: cs:xenial/rabbitmq-server
+    charm: cs:bionic/rabbitmq-server
     num_units: 3
     to: [ "lxd:1", "lxd:2", "lxd:3" ]
   heat:
-    charm: cs:xenial/heat
+    charm: cs:bionic/heat
     num_units: 3
     options:
       vip: 192.168.1.246
       vip_cidr: 24
     to: [ "lxd:1", "lxd:2", "lxd:3" ]
   keystone:
-    charm: cs:xenial/keystone
+    charm: cs:bionic/keystone
     options:
       admin-password: password
       admin-role: admin
-      openstack-origin: cloud:xenial-newton
+      openstack-origin: cloud:bionic-newton
       vip: 192.168.1.241
       vip_cidr: 24
     num_units: 3
     to: [ "lxd:1", "lxd:2", "lxd:3" ]
   nova-cloud-controller:
-    charm: cs:xenial/nova-cloud-controller
+    charm: cs:bionic/nova-cloud-controller
     options:
       network-manager: Neutron
-      openstack-origin: cloud:xenial-newton
+      openstack-origin: cloud:bionic-newton
       vip: 192.168.1.242
       vip_cidr: 24
     num_units: 3
     to: [ "lxd:1", "lxd:2", "lxd:3" ]
   neutron-api:
-    charm: cs:xenial/neutron-api
-    series: xenial
+    charm: cs:bionic/neutron-api
+    series: bionic
     options:
       manage-neutron-plugin-legacy-mode: false
-      openstack-origin: cloud:xenial-newton
+      openstack-origin: cloud:bionic-newton
       vip: 192.168.1.243
       vip_cidr: 24
     num_units: 3
     to: [ "lxd:1", "lxd:2", "lxd:3" ]
   glance:
-    charm: cs:xenial/glance
+    charm: cs:bionic/glance
     options:
-      openstack-origin: cloud:xenial-newton
+      openstack-origin: cloud:bionic-newton
       vip: 192.168.1.244
       vip_cidr: 24
     num_units: 3
     to: [ "lxd:1", "lxd:2", "lxd:3" ]
   openstack-dashboard:
-    charm: cs:xenial/openstack-dashboard
+    charm: cs:bionic/openstack-dashboard
     options:
-      openstack-origin: cloud:xenial-newton
+      openstack-origin: cloud:bionic-newton
       vip: 192.168.1.245
       vip_cidr: 24
     num_units: 3
     to: [ "lxd:1", "lxd:2", "lxd:3" ]
   nova-compute:
-    charm: cs:xenial/nova-compute
+    charm: cs:bionic/nova-compute
     options:
-      openstack-origin: cloud:xenial-newton
+      openstack-origin: cloud:bionic-newton
     num_units: 3
     to: [ "4", "5", "6" ]
   mysql-hacluster:
-    charm: cs:xenial/hacluster
+    charm: cs:bionic/hacluster
     options:
       cluster_count: 3
     num_units: 0
   keystone-hacluster:
-    charm: cs:xenial/hacluster
+    charm: cs:bionic/hacluster
     options:
       cluster_count: 3
     num_units: 0
   ncc-hacluster:
-    charm: cs:xenial/hacluster
+    charm: cs:bionic/hacluster
     options:
       cluster_count: 3
     num_units: 0
   neutron-hacluster:
-    charm: cs:xenial/hacluster
+    charm: cs:bionic/hacluster
     options:
       cluster_count: 3
     num_units: 0
   glance-hacluster:
-    charm: cs:xenial/hacluster
+    charm: cs:bionic/hacluster
     options:
       cluster_count: 3
     num_units: 0
   dashboard-hacluster:
-    charm: cs:xenial/hacluster
+    charm: cs:bionic/hacluster
     options:
       cluster_count: 3
     num_units: 0
   heat-hacluster:
-    charm: cs:xenial/hacluster
+    charm: cs:bionic/hacluster
     options:
       cluster_count: 3
     num_units: 0
   contrail-openstack:
     charm: ./contrail-openstack
-    series: xenial
+    series: bionic
     num_units: 0
   contrail-agent:
     charm: ./contrail-agent
     num_units: 0
-    series: xenial
+    series: bionic
     options:
       log-level: "SYS_DEBUG"
   contrail-analytics:
     charm: ./contrail-analytics
     num_units: 3
-    series: xenial
+    series: bionic
     options:
       min-cluster-size: 3
     to: [ "1", "2", "3" ]
   contrail-analyticsdb:
     charm: ./contrail-analyticsdb
     num_units: 3
-    series: xenial
+    series: bionic
     options:
       min-cluster-size: 3
       log-level: "SYS_DEBUG"
@@ -146,7 +146,7 @@ services:
     to: [ "1", "2", "3" ]
   contrail-controller:
     charm: ./contrail-controller
-    series: xenial
+    series: bionic
     options:
       min-cluster-size: 3
       vip: 192.168.1.254
@@ -157,18 +157,18 @@ services:
     to: [ "1", "2", "3" ]
   contrail-keystone-auth:
     charm: ./contrail-keystone-auth
-    series: xenial
+    series: bionic
     num_units: 1
     to: [ "lxd:1" ]
 
   contrail-keepalived:
     charm: cs:~containers/keepalived
-    series: xenial
+    series: bionic
     options:
       virtual_ip: 192.168.1.254
   contrail-haproxy:
     charm: haproxy
-    series: xenial
+    series: bionic
     expose: true
     options:
       peering_mode: "active-active"
@@ -226,26 +226,26 @@ relations:
 
 machines:
   "1":
-    series: xenial
+    series: bionic
     #constraints: mem=15G root-disk=40G
     constraints: tags=contrail-controller-vm-1
   "2":
-    series: xenial
+    series: bionic
     #constraints: mem=15G root-disk=40G
     constraints: tags=contrail-controller-vm-2
   "3":
-    series: xenial
+    series: bionic
     #constraints: mem=15G root-disk=40G
     constraints: tags=contrail-controller-vm-3
   "4":
-    series: xenial
+    series: bionic
     #constraints: mem=4G root-disk=20G
     constraints: tags=compute-storage-1
   "5":
-    series: xenial
+    series: bionic
     #constraints: mem=4G root-disk=20G
     constraints: tags=compute-storage-2
   "6":
-    series: xenial
+    series: bionic
     #constraints: mem=4G root-disk=20G
     constraints: tags=compute-storage-3

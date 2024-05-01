@@ -4,9 +4,9 @@ maintainer: Andrey Pavlov <andrey.mp@gmail.com>
 description: |
   Contrail analytics component within docker container.
 series:
-  - xenial
   - bionic
   - focal
+  - jammy
 peers:
   analytics-cluster:
     interface: contrail-analytics-cluster
