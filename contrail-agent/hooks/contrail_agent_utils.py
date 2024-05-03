@@ -28,7 +28,6 @@ from charmhelpers.core.host import (
     umount,
     service_restart,
     get_total_ram,
-    lsb_release,
     mkdir,
     write_file,
 )
@@ -416,8 +415,6 @@ def fix_dns_settings():
     # vrouter-agent container - let's remove local DNS proxy from
     # the path and send DNS requests directly to the HUB.
     # this situation is observed only in bionic and next releases.
-    if lsb_release()['DISTRIB_CODENAME'] not in ['bionic', 'focal']:
-        return
     if os.path.exists('/run/systemd/resolve/resolv.conf'):
         os.remove('/etc/resolv.conf')
         os.symlink('/run/systemd/resolve/resolv.conf', '/etc/resolv.conf')
