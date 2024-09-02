@@ -106,6 +106,10 @@ services:
 {{ logging | indent(4,True) }}
   rabbitmq:
     image: "{{ container_registry }}/contrail-external-rabbitmq:{{ contrail_version_tag }}"
+{% if container_runtime == 'containerd' %}
+    entrypoint: ["/bin/bash", "-c", "ulimit -n 4096 && /contrail-entrypoint.sh rabbitmq-server"]
+    privileged: true
+{% endif %}
     env_file: /etc/contrail/common_config.env
     environment:
       - RABBITMQ_NODES={{ controller_servers|sort|join(',') }}
