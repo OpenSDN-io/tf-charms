@@ -310,7 +310,7 @@ class Docker(container_engine_base.Container):
         cmd = [DOCKER_CLI, "restart", cnt_id]
         check_call(cmd)
 
-    def get_contrail_version(self, image, tag, pkg="python-contrail"):
+    def get_contrail_version(self, image, tag, pkg="python3-contrail"):
         image_id = self.get_image_id(image, tag)
         try:
             args = [DOCKER_CLI, "image", "inspect", "--format='{{.Config.Labels.version}}'", image_id]

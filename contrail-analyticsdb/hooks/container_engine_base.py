@@ -35,7 +35,7 @@ class Container():
     def restart_container(self, path, service):
         pass
 
-    def get_contrail_version(self, image, tag, pkg="python-contrail"):
+    def get_contrail_version(self, image, tag, pkg="python3-contrail"):
         pass
 
     def config_changed(self):
