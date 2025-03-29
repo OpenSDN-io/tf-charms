@@ -36,27 +36,27 @@ WEBUI_CONFIGS_PATH = BASE_CONFIGS_PATH + "/webui"
 REDIS_CONFIGS_PATH = BASE_CONFIGS_PATH + "/redis"
 
 IMAGES = [
-    "contrail-node-init",
-    "contrail-nodemgr",
-    "contrail-controller-config-api",
-    "contrail-controller-config-svcmonitor",
-    "contrail-controller-config-schema",
-    "contrail-controller-config-devicemgr",
-    "contrail-controller-control-control",
-    "contrail-controller-control-named",
-    "contrail-controller-control-dns",
-    "contrail-controller-webui-web",
-    "contrail-controller-webui-job",
-    "contrail-external-cassandra",
-    "contrail-external-zookeeper",
-    "contrail-external-rabbitmq",
-    "contrail-external-redis",
-    "contrail-status",
+    "opensdn-node-init",
+    "opensdn-nodemgr",
+    "opensdn-controller-config-api",
+    "opensdn-controller-config-svcmonitor",
+    "opensdn-controller-config-schema",
+    "opensdn-controller-config-devicemgr",
+    "opensdn-controller-control-control",
+    "opensdn-controller-control-named",
+    "opensdn-controller-control-dns",
+    "opensdn-controller-webui-web",
+    "opensdn-controller-webui-job",
+    "opensdn-external-cassandra",
+    "opensdn-external-zookeeper",
+    "opensdn-external-rabbitmq",
+    "opensdn-external-redis",
+    "opensdn-status",
 ]
 # images for new versions that can be absent in previous releases
 IMAGES_OPTIONAL = [
-    "contrail-provisioner",
-    "contrail-controller-config-dnsmasq",
+    "opensdn-provisioner",
+    "opensdn-controller-config-dnsmasq",
 ]
 
 SERVICES = {
@@ -510,7 +510,7 @@ def update_nrpe_config():
     ctl_status_shortname = 'check_contrail_status_' + MODULE
     nrpe_compat.add_check(
         shortname=ctl_status_shortname,
-        description='Check contrail-status',
+        description='Check opensdn-status',
         check_cmd=common_utils.contrail_status_cmd(MODULE, plugins_dir)
     )
 

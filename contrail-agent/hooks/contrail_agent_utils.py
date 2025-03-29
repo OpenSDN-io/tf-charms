@@ -42,21 +42,21 @@ BASE_CONFIGS_PATH = "/etc/contrail"
 
 CONFIGS_PATH = BASE_CONFIGS_PATH + "/vrouter"
 IMAGES = [
-    "contrail-node-init",
-    "contrail-nodemgr",
-    "contrail-vrouter-agent",
-    "contrail-status",
+    "opensdn-node-init",
+    "opensdn-nodemgr",
+    "opensdn-vrouter-agent",
+    "opensdn-status",
 ]
 # images for new versions that can be absent in previous releases
 IMAGES_OPTIONAL = [
-    "contrail-provisioner",
+    "opensdn-provisioner",
 ]
 IMAGES_KERNEL = [
-    "contrail-vrouter-kernel-build-init",
+    "opensdn-vrouter-kernel-build-init",
 ]
 IMAGES_DPDK = [
-    "contrail-vrouter-kernel-init-dpdk",
-    "contrail-vrouter-agent-dpdk",
+    "opensdn-vrouter-kernel-init-dpdk",
+    "opensdn-vrouter-agent-dpdk",
 ]
 SERVICES = {
     "vrouter": [
@@ -621,7 +621,7 @@ def update_nrpe_config():
     ctl_status_shortname = 'check_contrail_status_' + MODULE
     nrpe_compat.add_check(
         shortname=ctl_status_shortname,
-        description='Check contrail-status',
+        description='Check opensdn-status',
         check_cmd=common_utils.contrail_status_cmd(MODULE, plugins_dir)
     )
 

@@ -29,8 +29,8 @@ BASE_CONFIGS_PATH = "/etc/contrail"
 
 CONFIGS_PATH = BASE_CONFIGS_PATH + "/contrail-kubernetes-master"
 IMAGES = [
-    "contrail-kubernetes-kube-manager",
-    "contrail-status",
+    "opensdn-kubernetes-kube-manager",
+    "opensdn-status",
 ]
 SERVICES = {
     "kubernetes": [
@@ -229,7 +229,7 @@ def update_nrpe_config():
     ctl_status_shortname = 'check_contrail_status_' + MODULE.replace('-', '_')
     nrpe_compat.add_check(
         shortname=ctl_status_shortname,
-        description='Check contrail-status',
+        description='Check opensdn-status',
         check_cmd=common_utils.contrail_status_cmd(MODULE, plugins_dir)
     )
 

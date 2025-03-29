@@ -1,10 +1,10 @@
 version: '2'
 services:
   node-init:
-    image: "{{ container_registry }}/contrail-node-init:{{ contrail_version_tag }}"
+    image: "{{ container_registry }}/opensdn-node-init:{{ contrail_version_tag }}"
     env_file: /etc/contrail/common_kubemanager.env
     environment:
-      - CONTRAIL_STATUS_IMAGE="{{ container_registry }}/contrail-status:{{ contrail_version_tag }}"
+      - CONTRAIL_STATUS_IMAGE="{{ container_registry }}/opensdn-status:{{ contrail_version_tag }}"
     privileged: true
     pid: host
     network_mode: "host"
@@ -19,7 +19,7 @@ services:
       - /var/crashes:/var/crashes
 {{ logging | indent(4,True) }}
   kubemanager:
-    image: "{{ container_registry }}/contrail-kubernetes-kube-manager:{{ contrail_version_tag }}"
+    image: "{{ container_registry }}/opensdn-kubernetes-kube-manager:{{ contrail_version_tag }}"
     env_file: /etc/contrail/common_kubemanager.env
     network_mode: host
     environment:

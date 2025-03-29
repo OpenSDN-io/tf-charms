@@ -124,9 +124,9 @@ def remove_file_safe(path):
 
 def get_contrail_status_txt(module, services):
     try:
-        output = check_output("export CONTRAIL_STATUS_CONTAINER_NAME=contrail-status-{} ; contrail-status".format(module), shell=True).decode('UTF-8')
+        output = check_output("export CONTRAIL_STATUS_CONTAINER_NAME=opensdn-status-{} ; opensdn-status".format(module), shell=True).decode('UTF-8')
     except Exception as e:
-        log("Container is not ready to get contrail-status: " + str(e))
+        log("Container is not ready to get opensdn-status: " + str(e))
         status_set("waiting", "Waiting services to run in container")
         return False
 
@@ -149,9 +149,9 @@ def get_contrail_status_txt(module, services):
 
 def get_contrail_status_json(module, services):
     try:
-        output = json.loads(check_output("export CONTRAIL_STATUS_CONTAINER_NAME=contrail-status-{} ; contrail-status --format json".format(module), shell=True).decode('UTF-8'))
+        output = json.loads(check_output("export CONTRAIL_STATUS_CONTAINER_NAME=opensdn-status-{} ; opensdn-status --format json".format(module), shell=True).decode('UTF-8'))
     except Exception as e:
-        log("Container is not ready to get contrail-status: " + str(e))
+        log("Container is not ready to get opensdn-status: " + str(e))
         status_set("waiting", "Waiting services to run in container")
         return False
 
@@ -177,7 +177,7 @@ def update_services_status(module, services):
     for group in services:
         if group not in statuses:
             status_set("waiting",
-                       "POD " + group + " is absent in the contrail-status")
+                       "POD " + group + " is absent in the opensdn-status")
             return False
         # expected services
         for srv in services[group]:
@@ -186,7 +186,7 @@ def update_services_status(module, services):
             stats = [statuses[group][x] for x in statuses[group] if x == srv or x.startswith(srv + '-')]
             if not stats:
                 status_set("waiting",
-                           srv + " is absent in the contrail-status")
+                           srv + " is absent in the opensdn-status")
                 return False
             for status in stats:
                 if status not in ["active", "backup"]:
@@ -198,8 +198,8 @@ def update_services_status(module, services):
     status_set("active", "Unit is ready")
     try:
         tag = config.get('image-tag')
-        container_engine().pull("contrail-node-init", tag)
-        version = container_engine().get_contrail_version("contrail-node-init", tag)
+        container_engine().pull("opensdn-node-init", tag)
+        version = container_engine().get_contrail_version("opensdn-node-init", tag)
         application_version_set(version)
     except CalledProcessError as e:
         log("Couldn't detect installed application version: " + str(e))
@@ -320,7 +320,7 @@ def update_certificates(module, cert, key, ca):
         ("/private/server-privkey.pem", key, 0o640),
     ]
     # create common directories to create symlink
-    # this is needed for contrail-status
+    # this is needed for opensdn-status
     _try_os(os.makedirs, "/etc/contrail/ssl/certs")
     _try_os(os.makedirs, "/etc/contrail/ssl/private")
     # create before files appear to set correct permisions
@@ -335,7 +335,7 @@ def update_certificates(module, cert, key, ca):
             continue
         changed = True
         save_file(cfile, data, perms=perms)
-        # re-create symlink to common place for contrail-status
+        # re-create symlink to common place for opensdn-status
         _try_os(os.remove, "/etc/contrail/ssl" + fname)
         _try_os(os.symlink, cfile, "/etc/contrail/ssl" + fname)
     return changed
@@ -391,7 +391,7 @@ def rsync_nrpe_checks(plugins_dir):
 
 
 def add_nagios_to_sudoers():
-    sudoers_content = 'nagios ALL = NOPASSWD:SETENV: /usr/bin/contrail-status'
+    sudoers_content = 'nagios ALL = NOPASSWD:SETENV: /usr/bin/opensdn-status'
     cmd = ('sudo bash -c \'echo \"{}\" > /etc/sudoers.d/nagios\''
            .format(sudoers_content))
     try:

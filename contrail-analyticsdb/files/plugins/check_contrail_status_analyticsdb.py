@@ -28,9 +28,9 @@ CRITICAL = 2
 
 def get_contrail_status_txt(services):
     try:
-        output = subprocess.check_output("export CONTRAIL_STATUS_CONTAINER_NAME=contrail-status-analyticsdb-nrpe ; sudo -E contrail-status", shell=True).decode('UTF-8')
+        output = subprocess.check_output("export CONTRAIL_STATUS_CONTAINER_NAME=opensdn-status-analyticsdb-nrpe ; sudo -E opensdn-status", shell=True).decode('UTF-8')
     except subprocess.CalledProcessError as err:
-        message = ('CRITICAL: Could not get contrail-status.'
+        message = ('CRITICAL: Could not get opensdn-status.'
                    ' return code: {} cmd: {} output: {}'.
                    format(err.returncode, err.cmd, err.output))
         print(message)
@@ -56,9 +56,9 @@ def get_contrail_status_txt(services):
 
 def get_contrail_status_json(services):
     try:
-        output = json.loads(subprocess.check_output("export CONTRAIL_STATUS_CONTAINER_NAME=contrail-status-analyticsdb-nrpe ; sudo -E contrail-status --format json", shell=True).decode('UTF-8'))
+        output = json.loads(subprocess.check_output("export CONTRAIL_STATUS_CONTAINER_NAME=opensdn-status-analyticsdb-nrpe ; sudo -E opensdn-status --format json", shell=True).decode('UTF-8'))
     except subprocess.CalledProcessError as err:
-        message = ('CRITICAL: Could not get contrail-status.'
+        message = ('CRITICAL: Could not get opensdn-status.'
                    ' return code: {} cmd: {} output: {}'.
                    format(err.returncode, err.cmd, err.output))
         print(message)
@@ -80,7 +80,7 @@ def check_contrail_status(services, version=None):
 
     for group in services:
         if group not in statuses:
-            message = ('WARNING: POD {} is absent in the contrail-status'
+            message = ('WARNING: POD {} is absent in the opensdn-status'
                        .format(group))
             print(message)
             sys.exit(WARNING)
@@ -90,7 +90,7 @@ def check_contrail_status(services, version=None):
             # actual service name can be present as a several workers like 'api-0', 'api-1', ...
             stats = [statuses[group][x] for x in statuses[group] if x == srv or x.startswith(srv + '-')]
             if not stats:
-                message = ('WARNING: {} is absent in the contrail-status'
+                message = ('WARNING: {} is absent in the opensdn-status'
                            .format(srv))
                 print(message)
                 sys.exit(WARNING)

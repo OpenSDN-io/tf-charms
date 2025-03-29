@@ -1,10 +1,10 @@
 version: '2'
 services:
   node-init:
-    image: "{{ container_registry }}/contrail-node-init:{{ contrail_version_tag }}"
+    image: "{{ container_registry }}/opensdn-node-init:{{ contrail_version_tag }}"
     env_file: /etc/contrail/common_analytics.env
     environment:
-      - CONTRAIL_STATUS_IMAGE="{{ container_registry }}/contrail-status:{{ contrail_version_tag }}"
+      - CONTRAIL_STATUS_IMAGE="{{ container_registry }}/opensdn-status:{{ contrail_version_tag }}"
     privileged: true
     pid: host
     network_mode: "host"
@@ -19,7 +19,7 @@ services:
       - /var/crashes:/var/crashes
 {{ logging | indent(4,True) }}
   nodemgr:
-    image: "{{ container_registry }}/contrail-nodemgr:{{ contrail_version_tag }}"
+    image: "{{ container_registry }}/opensdn-nodemgr:{{ contrail_version_tag }}"
     env_file: /etc/contrail/common_analytics.env
     environment:
       - NODE_TYPE=analytics
@@ -34,7 +34,7 @@ services:
 {{ logging | indent(4,True) }}
 {% if contrail_version >= 2002 %}
   provisioner:
-    image: "{{ container_registry }}/contrail-provisioner:{{ contrail_version_tag }}"
+    image: "{{ container_registry }}/opensdn-provisioner:{{ contrail_version_tag }}"
     env_file:
       - /etc/contrail/common_analytics.env
     environment:
@@ -48,7 +48,7 @@ services:
 {{ logging | indent(4,True) }}
 {% endif %}
   api:
-    image: "{{ container_registry }}/contrail-analytics-api:{{ contrail_version_tag }}"
+    image: "{{ container_registry }}/opensdn-analytics-api:{{ contrail_version_tag }}"
     network_mode: "host"
     env_file: /etc/contrail/common_analytics.env
     volumes_from:
@@ -58,7 +58,7 @@ services:
     restart: always
 {{ logging | indent(4,True) }}
   collector:
-    image: "{{ container_registry }}/contrail-analytics-collector:{{ contrail_version_tag }}"
+    image: "{{ container_registry }}/opensdn-analytics-collector:{{ contrail_version_tag }}"
     network_mode: "host"
 {% if container_runtime == 'docker' %}
     cap_add:

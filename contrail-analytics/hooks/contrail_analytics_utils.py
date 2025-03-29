@@ -31,43 +31,43 @@ REDIS_CONFIGS_PATH = BASE_CONFIGS_PATH + "/redis"
 IMAGES = {
     500: {
         "analytics": [
-            "contrail-node-init",
-            "contrail-nodemgr",
-            "contrail-analytics-api",
-            "contrail-analytics-collector",
-            "contrail-analytics-query-engine",
-            "contrail-analytics-alarm-gen",
-            "contrail-analytics-snmp-collector",
-            "contrail-analytics-topology",
-            "contrail-external-redis",
+            "opensdn-node-init",
+            "opensdn-nodemgr",
+            "opensdn-analytics-api",
+            "opensdn-analytics-collector",
+            "opensdn-analytics-query-engine",
+            "opensdn-analytics-alarm-gen",
+            "opensdn-analytics-snmp-collector",
+            "opensdn-analytics-topology",
+            "opensdn-external-redis",
         ]
     },
     9999: {
         "analytics": [
-            "contrail-node-init",
-            "contrail-analytics-api",
-            "contrail-nodemgr",
-            "contrail-analytics-collector",
-            "contrail-external-redis",
-            "contrail-status",
+            "opensdn-node-init",
+            "opensdn-analytics-api",
+            "opensdn-nodemgr",
+            "opensdn-analytics-collector",
+            "opensdn-external-redis",
+            "opensdn-status",
         ],
         "analytics-alarm": [
-            "contrail-node-init",
-            "contrail-analytics-alarm-gen",
-            "contrail-nodemgr",
-            "contrail-external-kafka",
+            "opensdn-node-init",
+            "opensdn-analytics-alarm-gen",
+            "opensdn-nodemgr",
+            "opensdn-external-kafka",
         ],
         "analytics-snmp": [
-            "contrail-node-init",
-            "contrail-analytics-snmp-collector",
-            "contrail-nodemgr",
-            "contrail-analytics-snmp-topology",
+            "opensdn-node-init",
+            "opensdn-analytics-snmp-collector",
+            "opensdn-nodemgr",
+            "opensdn-analytics-snmp-topology",
         ],
     },
 }
 # images for new versions that can be absent in previous releases
 IMAGES_OPTIONAL = [
-    "contrail-provisioner",
+    "opensdn-provisioner",
 ]
 
 SERVICES = {
@@ -341,7 +341,7 @@ def update_nrpe_config():
     ctl_status_shortname = 'check_contrail_status_' + MODULE
     nrpe_compat.add_check(
         shortname=ctl_status_shortname,
-        description='Check contrail-status',
+        description='Check opensdn-status',
         check_cmd=common_utils.contrail_status_cmd(MODULE, plugins_dir)
     )
 

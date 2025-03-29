@@ -14,8 +14,8 @@ BASE_CONFIGS_PATH = "/etc/contrail"
 
 CONFIGS_PATH = BASE_CONFIGS_PATH + "/contrail-kubernetes-node"
 IMAGES = [
-    "contrail-kubernetes-cni-init",
-    "contrail-status",
+    "opensdn-kubernetes-cni-init",
+    "opensdn-status",
 ]
 
 

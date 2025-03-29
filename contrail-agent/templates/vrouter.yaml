@@ -1,10 +1,10 @@
 version: '2'
 services:
   node-init:
-    image: "{{ container_registry }}/contrail-node-init:{{ contrail_version_tag }}"
+    image: "{{ container_registry }}/opensdn-node-init:{{ contrail_version_tag }}"
     env_file: /etc/contrail/common_vrouter.env
     environment:
-      - CONTRAIL_STATUS_IMAGE="{{ container_registry }}/contrail-status:{{ contrail_version_tag }}"
+      - CONTRAIL_STATUS_IMAGE="{{ container_registry }}/opensdn-status:{{ contrail_version_tag }}"
     privileged: true
     pid: host
     network_mode: "host"
@@ -19,7 +19,7 @@ services:
       - /var/crashes:/var/crashes
 {{ logging | indent(4,True) }}
   nodemgr:
-    image: "{{ container_registry }}/contrail-nodemgr:{{ contrail_version_tag }}"
+    image: "{{ container_registry }}/opensdn-nodemgr:{{ contrail_version_tag }}"
     env_file: /etc/contrail/common_vrouter.env
     environment:
       - NODE_TYPE=vrouter
@@ -38,7 +38,7 @@ services:
 {{ logging | indent(4,True) }}
 {% if contrail_version >= 2002 %}
   provisioner:
-    image: "{{ container_registry }}/contrail-provisioner:{{ contrail_version_tag }}"
+    image: "{{ container_registry }}/opensdn-provisioner:{{ contrail_version_tag }}"
     env_file:
       - /etc/contrail/common_vrouter.env
     environment:
@@ -56,9 +56,9 @@ services:
 {% endif %}
   vrouter-kernel-init:
 {%- if agent_mode == 'dpdk' %}
-    image: "{{ container_registry }}/contrail-vrouter-kernel-init-dpdk:{{ contrail_version_tag }}"
+    image: "{{ container_registry }}/opensdn-vrouter-kernel-init-dpdk:{{ contrail_version_tag }}"
 {%- else %}
-    image: "{{ container_registry }}/contrail-vrouter-kernel-build-init:{{ contrail_version_tag }}"
+    image: "{{ container_registry }}/opensdn-vrouter-kernel-build-init:{{ contrail_version_tag }}"
 {%- endif %}
     network_mode: host
     privileged: true
@@ -83,7 +83,7 @@ services:
 {{ logging | indent(4,True) }}
 {%- if agent_mode == 'dpdk' %}
   vrouter-agent-dpdk:
-    image: "{{ container_registry }}/contrail-vrouter-agent-dpdk:{{ contrail_version_tag }}"
+    image: "{{ container_registry }}/opensdn-vrouter-agent-dpdk:{{ contrail_version_tag }}"
     network_mode: host
 {% if container_runtime == 'containerd' %}
     entrypoint: ["/bin/bash", "-c", "ulimit -n 4096 && /entrypoint.sh /usr/bin/contrail-vrouter-agent"]
@@ -107,7 +107,7 @@ services:
 {{ logging | indent(4,True) }}
 {%- endif %}
   vrouter-agent:
-    image: "{{ container_registry }}/contrail-vrouter-agent:{{ contrail_version_tag }}"
+    image: "{{ container_registry }}/opensdn-vrouter-agent:{{ contrail_version_tag }}"
     network_mode: host
 {% if container_runtime == 'containerd' %}
     entrypoint: ["/bin/bash", "-c", "ulimit -n 4096 && /entrypoint.sh /usr/bin/contrail-vrouter-agent"]

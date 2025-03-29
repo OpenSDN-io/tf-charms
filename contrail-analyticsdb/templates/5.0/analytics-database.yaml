@@ -4,10 +4,10 @@ volumes:
   analytics_zookeeper:
 services:
   node-init:
-    image: "{{ container_registry }}/contrail-node-init:{{ contrail_version_tag }}"
+    image: "{{ container_registry }}/opensdn-node-init:{{ contrail_version_tag }}"
     env_file: /etc/contrail/common_analyticsdb.env
     environment:
-      - CONTRAIL_STATUS_IMAGE="{{ container_registry }}/contrail-status:{{ contrail_version_tag }}"
+      - CONTRAIL_STATUS_IMAGE="{{ container_registry }}/opensdn-status:{{ contrail_version_tag }}"
     privileged: true
     pid: host
     network_mode: "host"
@@ -22,7 +22,7 @@ services:
       - /var/crashes:/var/crashes
 {{ logging | indent(4,True) }}
   nodemgr:
-    image: "{{ container_registry }}/contrail-nodemgr:{{ contrail_version_tag }}"
+    image: "{{ container_registry }}/opensdn-nodemgr:{{ contrail_version_tag }}"
     env_file: /etc/contrail/common_analyticsdb.env
     environment:
       - NODE_TYPE=database
@@ -38,7 +38,7 @@ services:
     restart: always
 {{ logging | indent(4,True) }}
   kafka:
-    image: "{{ container_registry }}/contrail-external-kafka:{{ contrail_version_tag }}"
+    image: "{{ container_registry }}/opensdn-external-kafka:{{ contrail_version_tag }}"
     network_mode: "host"
     env_file: /etc/contrail/common_analyticsdb.env
     environment:
@@ -53,7 +53,7 @@ services:
     restart: always
 {{ logging | indent(4,True) }}
   cassandra:
-    image: "{{ container_registry }}/contrail-external-cassandra:{{ contrail_version_tag }}"
+    image: "{{ container_registry }}/opensdn-external-cassandra:{{ contrail_version_tag }}"
     cap_add:
       - SYS_NICE  # CAP_SYS_NICE
     env_file: /etc/contrail/common_analyticsdb.env
@@ -77,7 +77,7 @@ services:
     restart: always
 {{ logging | indent(4,True) }}
   zookeeper:
-    image: "{{ container_registry }}/contrail-external-zookeeper:{{ contrail_version_tag }}"
+    image: "{{ container_registry }}/opensdn-external-zookeeper:{{ contrail_version_tag }}"
     env_file: /etc/contrail/common_analyticsdb.env
     environment:
       - ZOOKEEPER_NODES={{ analyticsdb_servers|sort|join(',') }}

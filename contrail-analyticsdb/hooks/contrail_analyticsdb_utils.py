@@ -26,23 +26,23 @@ BASE_CONFIGS_PATH = "/etc/contrail"
 CONFIGS_PATH = BASE_CONFIGS_PATH + "/analytics_database"
 IMAGES = {
     500: [
-        "contrail-node-init",
-        "contrail-nodemgr",
-        "contrail-external-kafka",
-        "contrail-external-cassandra",
-        "contrail-external-zookeeper",
+        "opensdn-node-init",
+        "opensdn-nodemgr",
+        "opensdn-external-kafka",
+        "opensdn-external-cassandra",
+        "opensdn-external-zookeeper",
     ],
     9999: [
-        "contrail-node-init",
-        "contrail-nodemgr",
-        "contrail-analytics-query-engine",
-        "contrail-external-cassandra",
-        "contrail-status",
+        "opensdn-node-init",
+        "opensdn-nodemgr",
+        "opensdn-analytics-query-engine",
+        "opensdn-external-cassandra",
+        "opensdn-status",
     ],
 }
 # images for new versions that can be absent in previous releases
 IMAGES_OPTIONAL = [
-    "contrail-provisioner",
+    "opensdn-provisioner",
 ]
 SERVICES = {
     500: {
@@ -227,7 +227,7 @@ def update_nrpe_config():
     ctl_status_shortname = 'check_contrail_status_' + MODULE
     nrpe_compat.add_check(
         shortname=ctl_status_shortname,
-        description='Check contrail-status',
+        description='Check opensdn-status',
         check_cmd=common_utils.contrail_status_cmd(MODULE, plugins_dir)
     )
 

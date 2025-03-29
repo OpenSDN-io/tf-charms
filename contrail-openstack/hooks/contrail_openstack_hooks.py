@@ -210,7 +210,7 @@ def _notify_heat(rid=None, redeploy=False):
 
     if redeploy:
         log("Redeploy code for heat-engine")
-        utils.deploy_openstack_code("contrail-openstack-heat-init", "heat")
+        utils.deploy_openstack_code("opensdn-openstack-heat-init", "heat")
         service_restart('heat-engine')
     else:
         log("Redeploy flag is false.")
@@ -264,7 +264,7 @@ def _notify_neutron(rid=None, redeploy=False):
 
     if redeploy:
         log("Redeploy code for neutron-server")
-        utils.deploy_openstack_code("contrail-openstack-neutron-init", "neutron")
+        utils.deploy_openstack_code("opensdn-openstack-neutron-init", "neutron")
         service_restart('neutron-server')
     else:
         log("Redeploy flag is false.")
@@ -342,7 +342,7 @@ def _notify_nova(rid=None, redeploy=False):
 
     if redeploy:
         log("Redeploy code for nova-compute")
-        utils.deploy_openstack_code("contrail-openstack-compute-init", "nova")
+        utils.deploy_openstack_code("opensdn-openstack-compute-init", "nova")
         service_restart('nova-compute')
     else:
         log("Redeploy flag is false.")
