@@ -23,9 +23,8 @@ import container_engine_base
 
 config = config()
 
-DOCKER_ADD_PACKAGES = ["docker-compose"]
+DOCKER_ADD_PACKAGES = ["docker-compose-plugin"]
 DOCKER_CLI = "/usr/bin/docker"
-DOCKER_COMPOSE_CLI = "docker-compose"
 
 DOCKER_TIMEOUTS = {
     "DOCKER_CLIENT_TIMEOUT": "120",
@@ -47,17 +46,13 @@ class Docker(container_engine_base.Container):
 
     def install(self):
         docker_runtime = config.get("docker_runtime")
-        if docker_runtime == "apt" or docker_runtime == "auto":
-            docker_package = "docker.io"
-            docker_repo = None
-            docker_key_url = None
-        elif docker_runtime == "upstream":
-            docker_package = "docker.ce"
+        if docker_runtime == "apt" or docker_runtime == "auto" or docker_runtime == "upstream":
+            docker_package = "docker-ce"
             docker_repo = "deb [arch={ARCH}] https://download.docker.com/linux/ubuntu {CODE} stable"
             docker_key_url = "https://download.docker.com/linux/ubuntu/gpg"
         else:
             # custom or default
-            docker_package = config.get("docker_runtime_package") or "docker.ce"
+            docker_package = config.get("docker_runtime_package") or "docker-ce"
             docker_repo = (config.get("docker_runtime_repo") or
                            "deb [arch={ARCH}] https://download.docker.com/linux/ubuntu {CODE} stable")
             docker_key_url = config.get("docker_runtime_key_url") or "https://download.docker.com/linux/ubuntu/gpg"
@@ -108,6 +103,9 @@ class Docker(container_engine_base.Container):
             else:
                 raise exc
         apt_update()
+        if dist.lower() == 'focal':
+            cmd = ['apt-get', '--assume-yes', '--allow-change-held-packages', 'purge', 'runc', 'containerd']
+            check_call(cmd)
         apt_install(docker_package)
         apt_install(DOCKER_ADD_PACKAGES)
         self._render_config()
@@ -210,13 +208,13 @@ class Docker(container_engine_base.Container):
                 data = yaml.load(fh)
                 count = len(data['services'])
             # check is it run or not
-            actual_count = len(check_output([DOCKER_COMPOSE_CLI, "-f", path, "ps", "-q"]).decode("UTF-8").splitlines())
+            actual_count = len(check_output([DOCKER_CLI, "compose", "-f", path, "ps", "-q"]).decode("UTF-8").splitlines())
             log("Services actual count: {}, required count: {}".format(actual_count, count), level=DEBUG)
             do_update = actual_count != count
         if do_update:
             env = os.environ.copy()
             env.update(DOCKER_TIMEOUTS)
-            check_call([DOCKER_COMPOSE_CLI, "-f", path, "up", "-d"], env=env)
+            check_call([DOCKER_CLI, "compose", "-f", path, "up", "-d"], env=env)
 
     def _send_sigquit(self, path, services_to_wait=None):
         self.compose_kill(path, "SIGQUIT")
@@ -241,16 +239,16 @@ class Docker(container_engine_base.Container):
         try:
             env = os.environ.copy()
             env.update(DOCKER_TIMEOUTS)
-            check_call([DOCKER_COMPOSE_CLI, "-f", path, "down"], env=env)
+            check_call([DOCKER_CLI, "compose", "-f", path, "down"], env=env)
         except Exception as e:
             log("Error during compose down: {}".format(e))
 
     def compose_kill(self, path, signal):
-        cmd = [DOCKER_COMPOSE_CLI, "-f", path, "kill", "-s", signal]
+        cmd = [DOCKER_CLI, "compose", "-f", path, "kill", "-s", signal]
         check_call(cmd)
 
     def get_container_id(self, path, service):
-        cmd = [DOCKER_COMPOSE_CLI, "-f", path, "ps", "-q", service]
+        cmd = [DOCKER_CLI, "compose", "-f", path, "ps", "-q", service]
         try:
             cnt_id = check_output(cmd).decode('UTF-8').rstrip().strip("'")
             if len(cnt_id) < 2:

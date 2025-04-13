@@ -1,4 +1,4 @@
-version: '2'
+version: '2.4'
 {% if contrail_version >= 2002 %}
 volumes:
   dnsmasq:
