@@ -36,27 +36,27 @@ WEBUI_CONFIGS_PATH = BASE_CONFIGS_PATH + "/webui"
 REDIS_CONFIGS_PATH = BASE_CONFIGS_PATH + "/redis"
 
 IMAGES = [
-    "opensdn-node-init",
-    "opensdn-nodemgr",
-    "opensdn-controller-config-api",
-    "opensdn-controller-config-svcmonitor",
-    "opensdn-controller-config-schema",
-    "opensdn-controller-config-devicemgr",
-    "opensdn-controller-control-control",
-    "opensdn-controller-control-named",
-    "opensdn-controller-control-dns",
-    "opensdn-controller-webui-web",
-    "opensdn-controller-webui-job",
-    "opensdn-external-cassandra",
-    "opensdn-external-zookeeper",
-    "opensdn-external-rabbitmq",
-    "opensdn-external-redis",
-    "opensdn-status",
+    "{}-node-init",
+    "{}-nodemgr",
+    "{}-controller-config-api",
+    "{}-controller-config-svcmonitor",
+    "{}-controller-config-schema",
+    "{}-controller-config-devicemgr",
+    "{}-controller-control-control",
+    "{}-controller-control-named",
+    "{}-controller-control-dns",
+    "{}-controller-webui-web",
+    "{}-controller-webui-job",
+    "{}-external-cassandra",
+    "{}-external-zookeeper",
+    "{}-external-rabbitmq",
+    "{}-external-redis",
+    "{}-status",
 ]
 # images for new versions that can be absent in previous releases
 IMAGES_OPTIONAL = [
-    "opensdn-provisioner",
-    "opensdn-controller-config-dnsmasq",
+    "{}-provisioner",
+    "{}-controller-config-dnsmasq",
 ]
 
 SERVICES = {
@@ -146,6 +146,7 @@ def get_context():
     ctx["container_registry"] = config.get("docker-registry")
     ctx["contrail_version_tag"] = config.get("image-tag")
     ctx["contrail_version"] = common_utils.get_contrail_version()
+    ctx["image_prefix"] = common_utils.get_image_prefix()
     ctx["config_api_worker_count"] = config.get("config-api-worker-count")
     ctx["apply_defaults"] = config.get("apply-defaults")
     ctx["huge_scale"] = config.get("huge-scale", False)
@@ -173,15 +174,16 @@ def get_context():
 
 def pull_images():
     tag = config.get('image-tag')
+    image_prefix = common_utils.get_image_prefix()
     for image in IMAGES:
         try:
-            common_utils.container_engine().pull(image, tag)
+            common_utils.container_engine().pull(image.format(image_prefix), tag)
         except Exception as e:
             log("Can't load image {}".format(e), level=ERROR)
-            raise Exception('Image could not be pulled: {}:{}'.format(image, tag))
+            raise Exception('Image could not be pulled: {}:{}'.format(image.format(image_prefix), tag))
     for image in IMAGES_OPTIONAL:
         try:
-            common_utils.container_engine().pull(image, tag)
+            common_utils.container_engine().pull(image.format(image_prefix), tag)
         except Exception as e:
             log("Can't load optional image {}".format(e))
 
@@ -510,7 +512,7 @@ def update_nrpe_config():
     ctl_status_shortname = 'check_contrail_status_' + MODULE
     nrpe_compat.add_check(
         shortname=ctl_status_shortname,
-        description='Check opensdn-status',
+        description='Check status',
         check_cmd=common_utils.contrail_status_cmd(MODULE, plugins_dir)
     )
 

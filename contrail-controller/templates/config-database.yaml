@@ -4,10 +4,10 @@ volumes:
  config_zookeeper:
 services:
   node-init:
-    image: "{{ container_registry }}/opensdn-node-init:{{ contrail_version_tag }}"
+    image: "{{ container_registry }}/{{ image_prefix }}-node-init:{{ contrail_version_tag }}"
     env_file: /etc/contrail/common_config.env
     environment:
-      - CONTRAIL_STATUS_IMAGE="{{ container_registry }}/opensdn-status:{{ contrail_version_tag }}"
+      - CONTRAIL_STATUS_IMAGE="{{ container_registry }}/{{ image_prefix }}-status:{{ contrail_version_tag }}"
     privileged: true
     pid: host
     network_mode: "host"
@@ -22,7 +22,7 @@ services:
       - /var/crashes:/var/crashes
 {{ logging | indent(4,True) }}
   nodemgr:
-    image: "{{ container_registry }}/opensdn-nodemgr:{{ contrail_version_tag }}"
+    image: "{{ container_registry }}/{{ image_prefix }}-nodemgr:{{ contrail_version_tag }}"
     env_file: /etc/contrail/common_config.env
     environment:
       - NODE_TYPE=config-database
@@ -39,7 +39,7 @@ services:
 {{ logging | indent(4,True) }}
 {% if contrail_version >= 2002 %}
   provisioner:
-    image: "{{ container_registry }}/opensdn-provisioner:{{ contrail_version_tag }}"
+    image: "{{ container_registry }}/{{ image_prefix }}-provisioner:{{ contrail_version_tag }}"
     env_file:
       - /etc/contrail/common_config.env
     environment:
@@ -53,7 +53,7 @@ services:
 {{ logging | indent(4,True) }}
 {% endif %}
   cassandra:
-    image: "{{ container_registry }}/opensdn-external-cassandra:{{ contrail_version_tag }}"
+    image: "{{ container_registry }}/{{ image_prefix }}-external-cassandra:{{ contrail_version_tag }}"
 {% if container_runtime == 'docker' %}
     cap_add:
       - SYS_NICE  # CAP_SYS_NICE
@@ -84,7 +84,7 @@ services:
     restart: always
 {{ logging | indent(4,True) }}
   zookeeper:
-    image: "{{ container_registry }}/opensdn-external-zookeeper:{{ contrail_version_tag }}"
+    image: "{{ container_registry }}/{{ image_prefix }}-external-zookeeper:{{ contrail_version_tag }}"
     env_file: /etc/contrail/common_config.env
     environment:
       - ZOOKEEPER_NODES={{ controller_servers|sort|join(',') }}
@@ -105,9 +105,9 @@ services:
     restart: always
 {{ logging | indent(4,True) }}
   rabbitmq:
-    image: "{{ container_registry }}/opensdn-external-rabbitmq:{{ contrail_version_tag }}"
+    image: "{{ container_registry }}/{{ image_prefix }}-external-rabbitmq:{{ contrail_version_tag }}"
 {% if container_runtime == 'containerd' %}
-    entrypoint: ["/bin/bash", "-c", "ulimit -n 4096 && /opensdn-entrypoint.sh rabbitmq-server"]
+    entrypoint: ["/bin/bash", "-c", "ulimit -n 4096 && /{{ image_prefix }}-entrypoint.sh rabbitmq-server"]
     privileged: true
 {% endif %}
     env_file: /etc/contrail/common_config.env

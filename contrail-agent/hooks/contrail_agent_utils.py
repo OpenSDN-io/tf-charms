@@ -42,21 +42,21 @@ BASE_CONFIGS_PATH = "/etc/contrail"
 
 CONFIGS_PATH = BASE_CONFIGS_PATH + "/vrouter"
 IMAGES = [
-    "opensdn-node-init",
-    "opensdn-nodemgr",
-    "opensdn-vrouter-agent",
-    "opensdn-status",
+    "{}-node-init",
+    "{}-nodemgr",
+    "{}-vrouter-agent",
+    "{}-status",
 ]
 # images for new versions that can be absent in previous releases
 IMAGES_OPTIONAL = [
-    "opensdn-provisioner",
+    "{}-provisioner",
 ]
 IMAGES_KERNEL = [
-    "opensdn-vrouter-kernel-build-init",
+    "{}-vrouter-kernel-build-init",
 ]
 IMAGES_DPDK = [
-    "opensdn-vrouter-kernel-init-dpdk",
-    "opensdn-vrouter-agent-dpdk",
+    "{}-vrouter-kernel-init-dpdk",
+    "{}-vrouter-agent-dpdk",
 ]
 SERVICES = {
     "vrouter": [
@@ -201,6 +201,7 @@ def get_context():
     ctx["xflow_node_ip"] = config.get("xflow-node-ip")
     ctx["vrouter_module_options"] = config.get("vrouter-module-options")
     ctx["contrail_version"] = common_utils.get_contrail_version()
+    ctx["image_prefix"] = common_utils.get_image_prefix()
     ctx["container_runtime"] = config.get("container_runtime")
 
     # NOTE: charm should set non-fqdn hostname to be compatible with R5.0 deployments
@@ -279,12 +280,13 @@ def compile_kernel_modules():
 
 def pull_images():
     tag = config.get('image-tag')
+    image_prefix = common_utils.get_image_prefix()
     for image in IMAGES + (IMAGES_DPDK if config["dpdk"] else IMAGES_KERNEL):
         try:
-            common_utils.container_engine().pull(image, tag)
+            common_utils.container_engine().pull(image.format(image_prefix), tag)
         except Exception as e:
             log("Can't load image {}".format(e), level=ERROR)
-            raise Exception('Image could not be pulled: {}:{}'.format(image, tag))
+            raise Exception('Image could not be pulled: {}:{}'.format(image.format(image_prefix), tag))
     for image in IMAGES_OPTIONAL:
         try:
             common_utils.container_engine().pull(image, tag)
@@ -621,7 +623,7 @@ def update_nrpe_config():
     ctl_status_shortname = 'check_contrail_status_' + MODULE
     nrpe_compat.add_check(
         shortname=ctl_status_shortname,
-        description='Check opensdn-status',
+        description='Check status',
         check_cmd=common_utils.contrail_status_cmd(MODULE, plugins_dir)
     )
 

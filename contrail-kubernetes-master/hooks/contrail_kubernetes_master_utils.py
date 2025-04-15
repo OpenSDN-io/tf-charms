@@ -29,8 +29,8 @@ BASE_CONFIGS_PATH = "/etc/contrail"
 
 CONFIGS_PATH = BASE_CONFIGS_PATH + "/contrail-kubernetes-master"
 IMAGES = [
-    "opensdn-kubernetes-kube-manager",
-    "opensdn-status",
+    "{}-kubernetes-kube-manager",
+    "{}-status",
 ]
 SERVICES = {
     "kubernetes": [
@@ -87,6 +87,7 @@ def get_context():
     ctx["container_registry"] = config.get("docker-registry")
     ctx["contrail_version_tag"] = config.get("image-tag")
     ctx["contrail_version"] = common_utils.get_contrail_version()
+    ctx["image_prefix"] = common_utils.get_image_prefix()
     ctx["kubemanager_servers"] = list(common_utils.json_loads(leader_get("cluster_info"), dict()).values())
     # get contrail configuration from relation
     ips = common_utils.json_loads(config.get("controller_ips"), list())
@@ -146,12 +147,13 @@ def get_context():
 
 def pull_images():
     tag = config.get('image-tag')
+    image_prefix = common_utils.get_image_prefix()
     for image in IMAGES:
         try:
-            common_utils.container_engine().pull(image, tag)
+            common_utils.container_engine().pull(image.format(image_prefix), tag)
         except Exception as e:
             log("Can't load image {}".format(e), level=ERROR)
-            raise Exception('Image could not be pulled: {}:{}'.format(image, tag))
+            raise Exception('Image could not be pulled: {}:{}'.format(image.format(image_prefix), tag))
 
 
 def update_charm_status():
@@ -229,7 +231,7 @@ def update_nrpe_config():
     ctl_status_shortname = 'check_contrail_status_' + MODULE.replace('-', '_')
     nrpe_compat.add_check(
         shortname=ctl_status_shortname,
-        description='Check opensdn-status',
+        description='Check status',
         check_cmd=common_utils.contrail_status_cmd(MODULE, plugins_dir)
     )
 

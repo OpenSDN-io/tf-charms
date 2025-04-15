@@ -38,7 +38,7 @@ def get_contrail_status_txt(services):
     try:
         output = subprocess.check_output("export CONTRAIL_STATUS_CONTAINER_NAME=opensdn-status-controller-nrpe ; sudo -E opensdn-status", shell=True).decode('UTF-8')
     except subprocess.CalledProcessError as err:
-        message = ('CRITICAL: Could not get opensdn-status.'
+        message = ('CRITICAL: Could not get status.'
                    ' return code: {} cmd: {} output: {}'.
                    format(err.returncode, err.cmd, err.output))
         print(message)
@@ -62,11 +62,11 @@ def get_contrail_status_txt(services):
     return statuses
 
 
-def get_contrail_status_json(services):
+def get_contrail_status_json(prefix):
     try:
-        output = json.loads(subprocess.check_output("export CONTRAIL_STATUS_CONTAINER_NAME=opensdn-status-controller-nrpe ; sudo -E opensdn-status --format json", shell=True).decode('UTF-8'))
+        output = json.loads(subprocess.check_output(f"export CONTRAIL_STATUS_CONTAINER_NAME={prefix}-status-controller-nrpe ; sudo -E {prefix}-status --format json", shell=True).decode('UTF-8'))
     except subprocess.CalledProcessError as err:
-        message = ('CRITICAL: Could not get opensdn-status.'
+        message = ('CRITICAL: Could not get status.'
                    ' return code: {} cmd: {} output: {}'.
                    format(err.returncode, err.cmd, err.output))
         print(message)
@@ -82,13 +82,13 @@ def get_contrail_status_json(services):
 
 def check_contrail_status(services, version=None):
     if version > 1912:
-        statuses = get_contrail_status_json(services)
+        statuses = get_contrail_status_json('opensdn' if version > 2401 else 'contrail')
     else:
         statuses = get_contrail_status_txt(services)
 
     for group in services:
         if group not in statuses:
-            message = ('WARNING: POD {} is absent in the opensdn-status'
+            message = ('WARNING: POD {} is absent in the status'
                        .format(group))
             print(message)
             sys.exit(WARNING)
@@ -98,7 +98,7 @@ def check_contrail_status(services, version=None):
             # actual service name can be present as a several workers like 'api-0', 'api-1', ...
             stats = [statuses[group][x] for x in statuses[group] if x == srv or x.startswith(srv + '-')]
             if not stats:
-                message = ('WARNING: {} is absent in the opensdn-status'
+                message = ('WARNING: {} is absent in the status'
                            .format(srv))
                 print(message)
                 sys.exit(WARNING)

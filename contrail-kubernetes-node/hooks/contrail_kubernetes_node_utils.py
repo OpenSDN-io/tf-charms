@@ -14,8 +14,8 @@ BASE_CONFIGS_PATH = "/etc/contrail"
 
 CONFIGS_PATH = BASE_CONFIGS_PATH + "/contrail-kubernetes-node"
 IMAGES = [
-    "opensdn-kubernetes-cni-init",
-    "opensdn-status",
+    "{}-kubernetes-cni-init",
+    "{}-status",
 ]
 
 
@@ -25,6 +25,7 @@ def get_context():
     ctx["log_level"] = config.get("log-level", "SYS_NOTICE")
     ctx["container_registry"] = config.get("docker-registry")
     ctx["contrail_version_tag"] = config.get("image-tag")
+    ctx["image_prefix"] = common_utils.get_image_prefix()
 
     ctx["cluster_name"] = config.get("cluster_name")
     ctx["nested_mode"] = config.get("nested_mode")
@@ -39,12 +40,13 @@ def get_context():
 
 def pull_images():
     tag = config.get('image-tag')
+    image_prefix = common_utils.get_image_prefix()
     for image in IMAGES:
         try:
-            common_utils.container_engine().pull(image, tag)
+            common_utils.container_engine().pull(image.format(image_prefix), tag)
         except Exception as e:
             log("Can't load image {}".format(e), level=ERROR)
-            raise Exception('Image could not be pulled: {}:{}'.format(image, tag))
+            raise Exception('Image could not be pulled: {}:{}'.format(image.format(image_prefix), tag))
 
 
 def update_charm_status():

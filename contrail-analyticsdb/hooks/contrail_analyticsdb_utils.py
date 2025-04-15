@@ -26,23 +26,23 @@ BASE_CONFIGS_PATH = "/etc/contrail"
 CONFIGS_PATH = BASE_CONFIGS_PATH + "/analytics_database"
 IMAGES = {
     500: [
-        "opensdn-node-init",
-        "opensdn-nodemgr",
-        "opensdn-external-kafka",
-        "opensdn-external-cassandra",
-        "opensdn-external-zookeeper",
+        "{}-node-init",
+        "{}-nodemgr",
+        "{}-external-kafka",
+        "{}-external-cassandra",
+        "{}-external-zookeeper",
     ],
     9999: [
-        "opensdn-node-init",
-        "opensdn-nodemgr",
-        "opensdn-analytics-query-engine",
-        "opensdn-external-cassandra",
-        "opensdn-status",
+        "{}-node-init",
+        "{}-nodemgr",
+        "{}-analytics-query-engine",
+        "{}-external-cassandra",
+        "{}-status",
     ],
 }
 # images for new versions that can be absent in previous releases
 IMAGES_OPTIONAL = [
-    "opensdn-provisioner",
+    "{}-provisioner",
 ]
 SERVICES = {
     500: {
@@ -122,6 +122,7 @@ def get_context():
     ctx["config_analytics_ssl_available"] = common_utils.is_config_analytics_ssl_available()
     ctx["logging"] = common_utils.container_engine().render_logging()
     ctx["contrail_version"] = common_utils.get_contrail_version()
+    ctx["image_prefix"] = common_utils.get_image_prefix()
     ctx["container_runtime"] = config.get("container_runtime")
     ctx.update(common_utils.json_loads(config.get("orchestrator_info"), dict()))
     if not ctx.get("cloud_orchestrators"):
@@ -136,17 +137,18 @@ def get_context():
 
 def pull_images():
     tag = config.get('image-tag')
+    image_prefix = common_utils.get_image_prefix()
     ctx = get_context()
     images = IMAGES.get(ctx["contrail_version"], IMAGES.get(9999))
     for image in images:
         try:
-            common_utils.container_engine().pull(image, tag)
+            common_utils.container_engine().pull(image.format(image_prefix), tag)
         except Exception as e:
             log("Can't load image {}".format(e), level=ERROR)
-            raise Exception('Image could not be pulled: {}:{}'.format(image, tag))
+            raise Exception('Image could not be pulled: {}:{}'.format(image.format(image_prefix), tag))
     for image in IMAGES_OPTIONAL:
         try:
-            common_utils.container_engine().pull(image, tag)
+            common_utils.container_engine().pull(image.format(image_prefix), tag)
         except Exception as e:
             log("Can't load optional image {}".format(e))
 
@@ -227,7 +229,7 @@ def update_nrpe_config():
     ctl_status_shortname = 'check_contrail_status_' + MODULE
     nrpe_compat.add_check(
         shortname=ctl_status_shortname,
-        description='Check opensdn-status',
+        description='Check status',
         check_cmd=common_utils.contrail_status_cmd(MODULE, plugins_dir)
     )
 

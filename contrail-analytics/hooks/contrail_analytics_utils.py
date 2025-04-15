@@ -31,43 +31,43 @@ REDIS_CONFIGS_PATH = BASE_CONFIGS_PATH + "/redis"
 IMAGES = {
     500: {
         "analytics": [
-            "opensdn-node-init",
-            "opensdn-nodemgr",
-            "opensdn-analytics-api",
-            "opensdn-analytics-collector",
-            "opensdn-analytics-query-engine",
-            "opensdn-analytics-alarm-gen",
-            "opensdn-analytics-snmp-collector",
-            "opensdn-analytics-topology",
-            "opensdn-external-redis",
+            "{}-node-init",
+            "{}-nodemgr",
+            "{}-analytics-api",
+            "{}-analytics-collector",
+            "{}-analytics-query-engine",
+            "{}-analytics-alarm-gen",
+            "{}-analytics-snmp-collector",
+            "{}-analytics-topology",
+            "{}-external-redis",
         ]
     },
     9999: {
         "analytics": [
-            "opensdn-node-init",
-            "opensdn-analytics-api",
-            "opensdn-nodemgr",
-            "opensdn-analytics-collector",
-            "opensdn-external-redis",
-            "opensdn-status",
+            "{}-node-init",
+            "{}-analytics-api",
+            "{}-nodemgr",
+            "{}-analytics-collector",
+            "{}-external-redis",
+            "{}-status",
         ],
         "analytics-alarm": [
-            "opensdn-node-init",
-            "opensdn-analytics-alarm-gen",
-            "opensdn-nodemgr",
-            "opensdn-external-kafka",
+            "{}-node-init",
+            "{}-analytics-alarm-gen",
+            "{}-nodemgr",
+            "{}-external-kafka",
         ],
         "analytics-snmp": [
-            "opensdn-node-init",
-            "opensdn-analytics-snmp-collector",
-            "opensdn-nodemgr",
-            "opensdn-analytics-snmp-topology",
+            "{}-node-init",
+            "{}-analytics-snmp-collector",
+            "{}-nodemgr",
+            "{}-analytics-snmp-topology",
         ],
     },
 }
 # images for new versions that can be absent in previous releases
 IMAGES_OPTIONAL = [
-    "opensdn-provisioner",
+    "{}-provisioner",
 ]
 
 SERVICES = {
@@ -177,6 +177,7 @@ def get_context():
     ctx["certs_hash"] = common_utils.get_certs_hash(MODULE) if ctx["ssl_enabled"] else ''
     ctx["container_registry"] = config.get("docker-registry")
     ctx["contrail_version_tag"] = config.get("image-tag")
+    ctx["image_prefix"] = common_utils.get_image_prefix()
     ctx["container_runtime"] = config.get("container_runtime")
     ctx.update(common_utils.json_loads(config.get("orchestrator_info"), dict()))
     if not ctx.get("cloud_orchestrators"):
@@ -197,6 +198,7 @@ def get_context():
 def pull_images():
     ctx = get_context()
     tag = config.get('image-tag')
+    image_prefix = common_utils.get_image_prefix()
     images = IMAGES.get(ctx["contrail_version"], IMAGES.get(9999)).copy()
 
     if not ctx.get("analyticsdb_enabled"):
@@ -206,13 +208,13 @@ def pull_images():
     for image_group in images.keys():
         for image in images.get(image_group):
             try:
-                common_utils.container_engine().pull(image, tag)
+                common_utils.container_engine().pull(image.format(image_prefix), tag)
             except Exception as e:
                 log("Can't load image {}".format(e), level=ERROR)
-                raise Exception('Image could not be pulled: {}:{}'.format(image, tag))
+                raise Exception('Image could not be pulled: {}:{}'.format(image.format(image_prefix), tag))
     for image in IMAGES_OPTIONAL:
         try:
-            common_utils.container_engine().pull(image, tag)
+            common_utils.container_engine().pull(image.format(image_prefix), tag)
         except Exception as e:
             log("Can't load optional image {}".format(e))
 
@@ -341,7 +343,7 @@ def update_nrpe_config():
     ctl_status_shortname = 'check_contrail_status_' + MODULE
     nrpe_compat.add_check(
         shortname=ctl_status_shortname,
-        description='Check opensdn-status',
+        description='Check status',
         check_cmd=common_utils.contrail_status_cmd(MODULE, plugins_dir)
     )
 

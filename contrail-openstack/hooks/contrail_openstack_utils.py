@@ -214,6 +214,7 @@ def get_context():
             ca_cert = relation_get("ca-cert", unit, rid)
             if ca_cert:
                 ctx["ca_cert_data"] = ca_cert
+    ctx["image_prefix"] = common_utils.get_image_prefix()
     log("CTX: " + str(ctx))
 
     auth_info = config.get("auth_info")

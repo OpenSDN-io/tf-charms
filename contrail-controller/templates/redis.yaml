@@ -1,14 +1,14 @@
 version: '2.4'
 services:
   redis:
-    image: "{{ container_registry }}/opensdn-external-redis:{{ contrail_version_tag }}"
+    image: "{{ container_registry }}/{{ image_prefix }}-external-redis:{{ contrail_version_tag }}"
     env_file: /etc/contrail/redis.env
     network_mode: "host"
     restart: always
 {{ logging | indent(4,True) }}
 {%- if ssl_enabled and config_analytics_ssl_available %}
   stunnel:
-    image: "{{ container_registry }}/opensdn-external-stunnel:{{ contrail_version_tag }}"
+    image: "{{ container_registry }}/{{ image_prefix }}-external-stunnel:{{ contrail_version_tag }}"
     env_file: /etc/contrail/redis.env
     network_mode: "host"
     restart: always

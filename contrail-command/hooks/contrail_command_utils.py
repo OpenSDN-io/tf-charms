@@ -43,6 +43,7 @@ def get_context():
     ctx["log_level"] = config.get("log-level", "SYS_NOTICE")
     ctx["container_registry"] = config.get("docker-registry")
     ctx["container_tag"] = config.get("image-tag")
+    ctx["image_prefix"] = common_utils.get_image_prefix()
 
     ctx["command_ip"] = common_utils.get_ip()
     ctx["contrail_container_tag"] = config.get("image-tag")
